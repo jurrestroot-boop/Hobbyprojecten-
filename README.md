@@ -1,14 +1,15 @@
 # Weekplanner
 
-Persoonlijke weekplanner voor Jurre: stageopdracht, schoolstage, kantoordagen in
+Persoonlijke weekplanner voor Jurre: projectopdracht, stageopdracht, kantoordagen in
 Middelburg en de avonden met Evie in één overzicht. Draait volledig lokaal op je
 telefoon — geen server, geen account, geen internetverbinding nodig.
 
 ## Wat de app van je week weet
 
-- **20 uur stageopdracht + 20 uur schoolstage** per week, met een urenbalans die
-  laat zien wat je nog moet inplannen. De 8 uur die je op donderdag op school
-  bent vallen binnen je schoolstage-uren.
+- **20 uur projectopdracht (Smart Consultant) + 20 uur stageopdracht (school)**
+  per week bij Delta, met een urenbalans die laat zien wat je nog moet
+  inplannen. De 8 uur die je op donderdag op school bent vallen binnen je
+  stageopdracht-uren.
 - **2× per week kantoor Middelburg**, wekelijks te kiezen uit maandag tot en met
   donderdag. De app waarschuwt zolang je er nog geen twee hebt gekozen.
 - **Vaste punten**: donderdag school (met een einddatum, want die verplichte

@@ -6,7 +6,8 @@
 | --- | --- |
 | Vorm | PWA eerst (Chrome → toevoegen aan startscherm), later een Android-app via Capacitor |
 | Agenda-koppeling | ICS-abonneerlinks |
-| Uren op school | Tellen binnen de 20 uur schoolstage; de verplichte schooldagen hebben een einddatum |
+| Twee helften | Projectopdracht vanuit Smart Consultant (20 uur) en stageopdracht vanuit school (20 uur) |
+| Uren op school | Tellen binnen de 20 uur stageopdracht; de verplichte schooldagen hebben een einddatum |
 | Kantoordagen | 2× per week, te kiezen uit maandag t/m donderdag |
 | Evie's diensten | Dagdienst 07:00–15:30, avonddienst 13:00–21:00 |
 | Opslag | Volledig lokaal (IndexedDB), geen server en geen account |

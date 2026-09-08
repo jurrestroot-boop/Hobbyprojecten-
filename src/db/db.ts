@@ -47,6 +47,26 @@ class PlannerDB extends Dexie {
           await tx.table('rules').update('enter-breda', { start: '18:00', end: '21:00' })
         }
       })
+
+    this.version(3).upgrade(async (tx) => {
+      // De categorieën heetten eerst 'stageopdracht' (Smart Consultant) en
+      // 'schoolstage' (school). Nu: 'projectopdracht' en 'stageopdracht'.
+      const rename: Record<string, string> = { stageopdracht: 'projectopdracht', schoolstage: 'stageopdracht' }
+      for (const table of ['blocks', 'rules']) {
+        await tx.table(table).toCollection().modify((row) => {
+          if (row.category in rename) row.category = rename[row.category]
+        })
+      }
+      const settings = await tx.table('settings').get('settings')
+      if (settings?.targets && 'schoolstage' in settings.targets) {
+        await tx.table('settings').update('settings', {
+          targets: {
+            projectopdracht: settings.targets.stageopdracht ?? 20,
+            stageopdracht: settings.targets.schoolstage ?? 20,
+          },
+        })
+      }
+    })
   }
 }
 

@@ -3,7 +3,7 @@ import type { Block, Settings } from './types'
 import { durationHours } from './time'
 
 export interface TargetBalance {
-  key: 'stageopdracht' | 'schoolstage'
+  key: 'projectopdracht' | 'stageopdracht'
   label: string
   planned: number
   target: number
@@ -19,7 +19,7 @@ export interface WeekBalance {
 }
 
 export function weekBalance(blocks: Block[], settings: Settings): WeekBalance {
-  const planned = { stageopdracht: 0, schoolstage: 0 }
+  const planned = { projectopdracht: 0, stageopdracht: 0 }
 
   for (const block of blocks) {
     const target = CATEGORIES[block.category].target
@@ -28,18 +28,18 @@ export function weekBalance(blocks: Block[], settings: Settings): WeekBalance {
 
   const targets: TargetBalance[] = [
     {
+      key: 'projectopdracht',
+      label: CATEGORIES.projectopdracht.label,
+      planned: planned.projectopdracht,
+      target: settings.targets.projectopdracht,
+      delta: planned.projectopdracht - settings.targets.projectopdracht,
+    },
+    {
       key: 'stageopdracht',
       label: CATEGORIES.stageopdracht.label,
       planned: planned.stageopdracht,
       target: settings.targets.stageopdracht,
       delta: planned.stageopdracht - settings.targets.stageopdracht,
-    },
-    {
-      key: 'schoolstage',
-      label: CATEGORIES.schoolstage.label,
-      planned: planned.schoolstage,
-      target: settings.targets.schoolstage,
-      delta: planned.schoolstage - settings.targets.schoolstage,
     },
   ]
 

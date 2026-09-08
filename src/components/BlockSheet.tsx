@@ -18,7 +18,7 @@ function isOccurrence(block: Block | null): boolean {
 
 export function BlockSheet({ block, date, onClose }: Props) {
   const [title, setTitle] = useState(block?.title ?? '')
-  const [category, setCategory] = useState<CategoryId>(block?.category ?? 'stageopdracht')
+  const [category, setCategory] = useState<CategoryId>(block?.category ?? 'projectopdracht')
   const [start, setStart] = useState(block?.start ?? '09:00')
   const [end, setEnd] = useState(block?.end ?? '12:00')
   const [location, setLocation] = useState<LocationId | ''>(block?.location ?? '')
@@ -84,7 +84,9 @@ export function BlockSheet({ block, date, onClose }: Props) {
         </div>
         <p className="hint">
           {CATEGORIES[category].target
-            ? `Telt mee voor je ${CATEGORIES[category].target === 'schoolstage' ? 'schoolstage' : 'stageopdracht'}-uren.`
+            ? CATEGORIES[category].target === 'stageopdracht'
+              ? 'Telt mee voor je stageopdracht-uren (school).'
+              : 'Telt mee voor je projectopdracht-uren (Smart Consultant).'
             : 'Telt niet mee voor je Delta-uren.'}
         </p>
       </div>

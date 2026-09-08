@@ -6,11 +6,11 @@ export type TimeStr = string
 export type Weekday = 1 | 2 | 3 | 4 | 5 | 6 | 7
 
 /** Waar de uren van een blok naartoe tellen. Null = telt niet mee voor Delta. */
-export type HourTarget = 'stageopdracht' | 'schoolstage' | null
+export type HourTarget = 'projectopdracht' | 'stageopdracht' | null
 
 export type CategoryId =
+  | 'projectopdracht'
   | 'stageopdracht'
-  | 'schoolstage'
   | 'school'
   | 'evie'
   | 'prive'
@@ -88,7 +88,7 @@ export interface WeekPlan {
 
 export interface Settings {
   id: 'settings'
-  targets: { stageopdracht: number; schoolstage: number }
+  targets: { projectopdracht: number; stageopdracht: number }
   /** Hoe vaak per week je op kantoor Middelburg moet zijn. */
   officeDaysRequired: number
   /** Uit welke weekdagen je die kantoordagen mag kiezen. */

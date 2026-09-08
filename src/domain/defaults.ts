@@ -2,7 +2,7 @@ import type { RecurringRule, Settings } from './types'
 
 export const DEFAULT_SETTINGS: Settings = {
   id: 'settings',
-  targets: { stageopdracht: 20, schoolstage: 20 },
+  targets: { projectopdracht: 20, stageopdracht: 20 },
   officeDaysRequired: 2,
   officeCandidateDays: [1, 2, 3, 4], // maandag t/m donderdag
   dayStart: '08:00',

@@ -8,24 +8,26 @@ interface CategoryMeta {
 }
 
 export const CATEGORIES: Record<CategoryId, CategoryMeta> = {
+  // Delta bestaat uit twee helften: de projectopdracht vanuit Smart Consultant
+  // en de stageopdracht vanuit school. Elk 20 uur per week.
+  projectopdracht: {
+    label: 'Projectopdracht',
+    short: 'Project',
+    color: '#3b6fd4',
+    target: 'projectopdracht',
+  },
   stageopdracht: {
     label: 'Stageopdracht',
-    short: 'Opdracht',
-    color: '#3b6fd4',
-    target: 'stageopdracht',
-  },
-  schoolstage: {
-    label: 'Schoolstage',
     short: 'Stage',
     color: '#2f9e7d',
-    target: 'schoolstage',
+    target: 'stageopdracht',
   },
   school: {
     label: 'School',
     short: 'School',
     color: '#7a5cc4',
-    // De 8 uur op school vallen binnen de 20 uur schoolstage.
-    target: 'schoolstage',
+    // De 8 uur op school vallen binnen de 20 uur stageopdracht.
+    target: 'stageopdracht',
   },
   evie: {
     label: 'Evie',

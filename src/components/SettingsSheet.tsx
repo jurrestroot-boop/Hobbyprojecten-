@@ -86,27 +86,27 @@ export function SettingsSheet({
     <Sheet title="Instellingen" onClose={onClose}>
       <div className="field-row">
         <div className="field">
-          <label htmlFor="set-opdr">Uren stageopdracht</label>
+          <label htmlFor="set-opdr">Uren projectopdracht (Smart Consultant)</label>
           <input
             id="set-opdr"
+            type="number"
+            min={0}
+            value={draft.targets.projectopdracht}
+            onChange={(e) => patch({ targets: { ...draft.targets, projectopdracht: Number(e.target.value) } })}
+          />
+        </div>
+        <div className="field">
+          <label htmlFor="set-stage">Uren stageopdracht (school)</label>
+          <input
+            id="set-stage"
             type="number"
             min={0}
             value={draft.targets.stageopdracht}
             onChange={(e) => patch({ targets: { ...draft.targets, stageopdracht: Number(e.target.value) } })}
           />
         </div>
-        <div className="field">
-          <label htmlFor="set-stage">Uren schoolstage</label>
-          <input
-            id="set-stage"
-            type="number"
-            min={0}
-            value={draft.targets.schoolstage}
-            onChange={(e) => patch({ targets: { ...draft.targets, schoolstage: Number(e.target.value) } })}
-          />
-        </div>
       </div>
-      <p className="hint">Je uren op school tellen binnen je schoolstage-uren.</p>
+      <p className="hint">Je uren op school tellen binnen je stageopdracht-uren.</p>
 
       <div className="field" style={{ marginTop: 14 }}>
         <label htmlFor="set-office">Kantoordagen per week</label>
