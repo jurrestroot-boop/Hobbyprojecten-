@@ -28,10 +28,15 @@ export function dayInsight(
   evieBusy: Shift[],
   plan: WeekPlan | undefined,
   settings: Settings,
+  /** Afspraken uit je externe agenda's: die bezetten jou ook. */
+  external: { start: string; end: string; allDay: boolean }[] = [],
 ): DayInsight {
   const isOffice = plan?.officeDays.includes(date) ?? false
   const evieHit = busyInEvening(evieBusy, settings.eveningStart)
-  const ownHit = busyInEvening(blocks, settings.eveningStart)
+  const ownHit = busyInEvening(
+    [...blocks, ...external.filter((e) => !e.allDay)],
+    settings.eveningStart,
+  )
 
   if (evieHit) {
     const title = (evieHit as Shift).title

@@ -6,7 +6,9 @@
 | --- | --- |
 | Vorm | PWA eerst (Chrome → toevoegen aan startscherm), later een Android-app via Capacitor |
 | Agenda-koppeling | ICS-abonneerlinks |
-| Uren op school | Tellen binnen de 20 uur schoolstage |
+| Uren op school | Tellen binnen de 20 uur schoolstage; de verplichte schooldagen hebben een einddatum |
+| Kantoordagen | 2× per week, te kiezen uit maandag t/m donderdag |
+| Evie's diensten | Dagdienst 07:00–15:30, avonddienst 13:00–21:00 |
 | Opslag | Volledig lokaal (IndexedDB), geen server en geen account |
 
 De web-app en de latere Android-app delen dezelfde code. Capacitor pakt de
@@ -34,17 +36,19 @@ Losse to-do's die niet aan een tijdblok hangen: "wat moet er nog gebeuren".
 Koppelbaar aan een categorie en een dag, met een deadline en een afvinkstatus.
 Een taak moet met één handeling een blok in je week kunnen worden.
 
-### Fase 4 — Externe agenda's
+### Fase 4 — Externe agenda's ✅
 
-Per agenda een ICS-link opslaan, met één knop ophalen en als achtergrondlaag in
-het weekoverzicht tonen — read-only, duidelijk onderscheiden van wat je zelf hebt
-gepland. Twee praktische punten:
+Drie agenda's — Delta, school en Smart Consultant — elk met een ICS-link. De
+synchroniseerknop bovenin haalt ze alle drie op; herhalende afspraken worden
+uitgeklapt en verzette of afgezegde keren gerespecteerd. Ze staan als
+achtergrondlaag in het weekoverzicht en tellen niet mee in de urenbalans, maar
+een avondafspraak uit werk telt wél als "jij bezet" voor de Evie-signalering.
 
-- Een browser mag door CORS lang niet elke ICS-URL rechtstreeks ophalen. Daarom
-  komt er naast het ophalen van een URL ook een import van een `.ics`-bestand.
-  In de latere Android-app vervalt die beperking en werkt de URL altijd.
-- De opgehaalde afspraken worden apart bewaard van je eigen blokken, zodat een
-  synchronisatie nooit je eigen planning overschrijft.
+- Een browser mag door CORS lang niet elke ICS-URL rechtstreeks ophalen. Lukt het
+  ophalen niet, dan zegt de app dat en kun je per agenda een `.ics`-bestand
+  importeren. In de latere Android-app vervalt die beperking.
+- Opgehaalde afspraken staan apart van je eigen blokken; een synchronisatie
+  overschrijft nooit je eigen planning.
 
 ### Fase 5 — Echte Android-app
 
@@ -63,10 +67,17 @@ src/components/ de schermen
 De regels zitten bewust in `src/domain/` en niet verspreid door de interface. Wat
 er verandert aan je afspraken bij Delta of school, verandert daar op één plek.
 
+## Opslag
+
+Alles staat in IndexedDB op het toestel. Elke wijziging wordt direct
+weggeschreven; er is geen opslaan-knop. De app vraagt het systeem bovendien om
+de opslag als persistent te markeren, zodat die niet wordt opgeruimd bij
+ruimtegebrek. Een export bij Instellingen is het vangnet.
+
 ## Openstaande vragen
 
-- Kloppen de standaardtijden? School donderdag 09:00–17:00, paardrijden
-  19:00–21:30, Enter Breda 19:00–22:00. Aan te passen bij Instellingen.
-- Kloppen de diensttijden van Evie (dag 07:00–15:30, avond 14:30–23:00, nacht
-  23:00–07:15)? Met de juiste tijden scheelt dat elke week invoerwerk.
-- Welke agenda's wil je inladen, en geven Delta en school daar een ICS-link voor?
+- Tot welke datum lopen de verplichte schooldagen op donderdag? Zet die bij
+  Instellingen → Vaste afspraken → "geldig t/m".
+- Kloppen school 09:00–17:00 en paardrijden 19:00–21:30?
+- Halen de drie ICS-links vanuit Chrome op, of moeten we voor sommige het
+  bestand importeren tot de Android-app er is?

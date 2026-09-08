@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Sheet } from './Sheet'
 import { db } from '../db/db'
 import { CATEGORIES } from '../domain/categories'
-import type { RecurringRule, Settings, Weekday } from '../domain/types'
+import { CalendarSection } from './CalendarSection'
+import type { Calendar, RecurringRule, Settings, Weekday } from '../domain/types'
 
 const WEEKDAYS: { id: Weekday; label: string }[] = [
   { id: 1, label: 'ma' }, { id: 2, label: 'di' }, { id: 3, label: 'wo' },
@@ -14,10 +15,12 @@ const NTH_LABELS = ['elke week', '1e van de maand', '2e van de maand', '3e van d
 export function SettingsSheet({
   settings,
   rules,
+  calendars,
   onClose,
 }: {
   settings: Settings
   rules: RecurringRule[]
+  calendars: Calendar[]
   onClose: () => void
 }) {
   const [draft, setDraft] = useState<Settings>(settings)
@@ -46,6 +49,8 @@ export function SettingsSheet({
       exportedAt: new Date().toISOString(),
       settings: await db.settings.toArray(),
       rules: await db.rules.toArray(),
+      calendars: await db.calendars.toArray(),
+      externalEvents: await db.externalEvents.toArray(),
       blocks: await db.blocks.toArray(),
       shifts: await db.shifts.toArray(),
       exceptions: await db.exceptions.toArray(),
@@ -150,6 +155,8 @@ export function SettingsSheet({
         </ul>
       </div>
 
+      <CalendarSection calendars={calendars} />
+
       <div className="setup-step">
         <h3>Back-up</h3>
         <p className="hint">Alles staat alleen op dit toestel. Exporteer af en toe.</p>
@@ -187,6 +194,16 @@ function RuleRow({ rule }: { rule: RecurringRule }) {
           {rule.owner === 'evie' && ' (Evie)'}
         </b>
         <span>{weekday} · {cadence} · {rule.start}–{rule.end}</span>
+        {rule.owner === 'jurre' && (
+          <label className="rule-until">
+            geldig t/m
+            <input
+              type="date"
+              value={rule.validUntil ?? ''}
+              onChange={(e) => db.rules.update(rule.id, { validUntil: e.target.value || undefined })}
+            />
+          </label>
+        )}
       </span>
       <button
         className={`pill${rule.enabled ? ' on' : ''}`}

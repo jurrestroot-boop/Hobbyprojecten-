@@ -3,18 +3,21 @@ import { dayName, durationHours, formatDay, formatHours } from '../domain/time'
 import type { Block } from '../domain/types'
 import { SHIFT_LABELS } from '../domain/defaults'
 import type { DayData } from '../db/hooks'
+import type { Calendar } from '../domain/types'
 
 interface Props {
   day: DayData
+  calendars: Map<string, Calendar>
   onEditBlock: (block: Block) => void
   onAdd: (date: string) => void
 }
 
-export function DayCard({ day, onEditBlock, onAdd }: Props) {
+export function DayCard({ day, calendars, onEditBlock, onAdd }: Props) {
   const { insight } = day
   const items = [
     ...day.blocks.map((b) => ({ kind: 'block' as const, at: b.start, block: b })),
     ...day.shifts.map((s) => ({ kind: 'shift' as const, at: s.start, shift: s })),
+    ...day.external.map((e) => ({ kind: 'ext' as const, at: e.allDay ? '' : e.start, ext: e })),
   ].sort((a, b) => a.at.localeCompare(b.at))
 
   return (
@@ -58,6 +61,23 @@ export function DayCard({ day, onEditBlock, onAdd }: Props) {
                 </span>
                 <span className="dur">{formatHours(durationHours(item.block.start, item.block.end))} u</span>
               </button>
+            ) : item.kind === 'ext' ? (
+              <div
+                className="block ext"
+                key={item.ext.id}
+                style={{ '--cat': calendars.get(item.ext.calendarId)?.color } as React.CSSProperties}
+              >
+                <span className="time">
+                  {item.ext.allDay ? <b>hele dag</b> : <><b>{item.ext.start}</b>{item.ext.end}</>}
+                </span>
+                <span className="body">
+                  <b>{item.ext.title}</b>
+                  <span>
+                    {calendars.get(item.ext.calendarId)?.name}
+                    {item.ext.location && ` · ${item.ext.location}`}
+                  </span>
+                </span>
+              </div>
             ) : (
               <div className="block shift" key={item.shift.id}>
                 <span className="time">

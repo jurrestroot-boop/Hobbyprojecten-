@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useWeek } from './db/hooks'
 import { seed } from './db/db'
+import { syncAll } from './db/sync'
 import { HoursCard } from './components/HoursCard'
 import { WeekStrip } from './components/WeekStrip'
 import { DayCard } from './components/DayCard'
@@ -21,6 +22,8 @@ export default function App() {
   const [selected, setSelected] = useState<DateStr | null>(null)
   const [sheet, setSheet] = useState<Sheet>({ kind: 'none' })
   const [ready, setReady] = useState(false)
+  const [syncing, setSyncing] = useState(false)
+  const [toast, setToast] = useState<string | null>(null)
 
   useEffect(() => {
     seed().then(() => setReady(true))
@@ -45,6 +48,26 @@ export default function App() {
     setSheet({ kind: 'block', block, date })
   }
 
+  async function sync() {
+    if (syncing) return
+    setSyncing(true)
+    try {
+      const results = await syncAll()
+      const failed = results.filter((r) => !r.ok)
+      const total = results.reduce((n, r) => n + r.count, 0)
+      setToast(
+        results.length === 0
+          ? 'Geen agenda\'s met een link. Voeg ze toe bij Instellingen.'
+          : failed.length === 0
+            ? `Bijgewerkt: ${total} afspraken uit ${results.length} agenda${results.length === 1 ? '' : "'s"}.`
+            : `${failed.map((f) => f.calendar.name).join(', ')} niet bijgewerkt — zie Instellingen.`,
+      )
+    } finally {
+      setSyncing(false)
+      setTimeout(() => setToast(null), 4000)
+    }
+  }
+
   return (
     <div className="app">
       <header className="topbar">
@@ -54,8 +77,20 @@ export default function App() {
           <small>{formatRange(week.dates[0], week.dates[6])}{isThisWeek ? ' · deze week' : ''}</small>
         </h1>
         <button className="icon-btn" onClick={() => goto(1)} aria-label="Volgende week">›</button>
+        {week.calendars.length > 0 && (
+          <button
+            className={`icon-btn${syncing ? ' spinning' : ''}`}
+            onClick={sync}
+            disabled={syncing}
+            aria-label="Agenda's synchroniseren"
+          >
+            ⟳
+          </button>
+        )}
         <button className="icon-btn" onClick={() => setSheet({ kind: 'settings' })} aria-label="Instellingen">⚙</button>
       </header>
+
+      {toast && <div className="toast" role="status">{toast}</div>}
 
       {!week.plan?.plannedAt && (
         <button
@@ -93,7 +128,13 @@ export default function App() {
       />
 
       {visibleDays.map((day) => (
-        <DayCard key={day.date} day={day} onEditBlock={(b) => openBlock(b, day.date)} onAdd={(d) => openBlock(null, d)} />
+        <DayCard
+          key={day.date}
+          day={day}
+          calendars={week.calendarById}
+          onEditBlock={(b) => openBlock(b, day.date)}
+          onAdd={(d) => openBlock(null, d)}
+        />
       ))}
 
       <button
@@ -109,7 +150,12 @@ export default function App() {
       )}
       {sheet.kind === 'setup' && <WeekSetupSheet week={week} onClose={() => setSheet({ kind: 'none' })} />}
       {sheet.kind === 'settings' && (
-        <SettingsSheet settings={week.settings} rules={week.rules} onClose={() => setSheet({ kind: 'none' })} />
+        <SettingsSheet
+          settings={week.settings}
+          rules={week.rules}
+          calendars={week.calendars}
+          onClose={() => setSheet({ kind: 'none' })}
+        />
       )}
     </div>
   )

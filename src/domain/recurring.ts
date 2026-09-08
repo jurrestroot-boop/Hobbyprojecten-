@@ -5,6 +5,8 @@ function appliesOn(rule: RecurringRule, date: DateStr): boolean {
   if (!rule.enabled) return false
   if (isoWeekday(date) !== rule.weekday) return false
   if (rule.nthOfMonth != null && nthWeekdayOfMonth(date) !== rule.nthOfMonth) return false
+  if (rule.validFrom && date < rule.validFrom) return false
+  if (rule.validUntil && date > rule.validUntil) return false
   return true
 }
 

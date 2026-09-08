@@ -47,6 +47,11 @@ export interface RecurringRule {
   end: TimeStr
   location?: LocationId
   enabled: boolean
+  /** Alleen geldig vanaf deze datum (inclusief). Leeg = altijd. */
+  validFrom?: DateStr
+  /** Alleen geldig tot en met deze datum. Leeg = altijd. Handig voor de
+   *  verplichte schooldagen die maar een paar weken duren. */
+  validUntil?: DateStr
 }
 
 /** Een vaste afspraak die op één specifieke datum niet doorgaat. */
@@ -92,4 +97,29 @@ export interface Settings {
   dayEnd: TimeStr
   /** Vanaf dit tijdstip telt het als 'avond' voor de Evie-signalering. */
   eveningStart: TimeStr
+}
+
+/** Een externe agenda die je via een ICS-link inlaadt: Delta, school, werk. */
+export interface Calendar {
+  id: string
+  name: string
+  /** ICS-adres. Leeg als je alleen bestanden importeert. */
+  url?: string
+  color: string
+  visible: boolean
+  lastSyncedAt?: string
+  lastError?: string
+  eventCount?: number
+}
+
+/** Eén (voorkomen van een) afspraak uit een externe agenda. Read-only. */
+export interface ExternalEvent {
+  id: string
+  calendarId: string
+  date: DateStr
+  start: TimeStr
+  end: TimeStr
+  allDay: boolean
+  title: string
+  location?: string
 }
